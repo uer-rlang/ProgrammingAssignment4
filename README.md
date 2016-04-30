@@ -55,26 +55,23 @@ mFeatures <- read.table( mPathToFeatures,
 ```
 Filter only those features that are means of stds (i.e. have 'mean()' or 'std()' substrings in their names)
 ```{r}
-mMeanAndStdIndex = grepl( '(mean|std)\\(\\)', mFeatures$feature_name )
+mFeatures <- filter( mFeatures, grepl( '(mean|std)\\(\\)', mFeatures$feature_name ) )
 ```
-Add 7 spesial features at the end that are also means
+Make features human readable
 ```{r}
-mMeanAndStdIndex[555:561] <- TRUE
-```
-```{r}
-mFeatures <- filter( mFeatures, mMeanAndStdIndex )
-#   Make features human readable
 mFeatures$feature_name <- gsub('Acc', 'Accelerator', mFeatures$feature_name )
 mFeatures$feature_name <- gsub('Gyro', 'Gyroscope', mFeatures$feature_name )
 mFeatures$feature_name <- gsub('Mag', 'Magnitude', mFeatures$feature_name )
 mFeatures$feature_name <- gsub('^t', 'time', mFeatures$feature_name )
 mFeatures$feature_name <- gsub('^f', 'frequency', mFeatures$feature_name )
-remove(mMeanAndStdIndex)
+mFeatures$feature_name <- gsub('mean\\(\\)', 'Mean', mFeatures$feature_name )
+mFeatures$feature_name <- gsub('std\\(\\)', 'Std', mFeatures$feature_name )
+mFeatures$feature_name <- gsub('-', '', mFeatures$feature_name )
 ```
 
 # ==========================
 # 4.  Reading testing data
-# 4.1 Reading catalog of subjects of test dataset from source file
+## 4.1 Reading catalog of subjects of test dataset from source file
 ```{r}
 mSubjectTest <- read.table( mPathToTestSubject,
                             sep = '',
